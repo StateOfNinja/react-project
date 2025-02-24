@@ -1,11 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import "./taskList.css";
+import './taskList.css';
 
-import Task from "../task/task";
+import Task from '../task/task';
 
-const TaskList = ({ todos, onToggleCompleted, onDeleted }) => {
+function TaskList({ todos, onToggleCompleted, onDeleted }) {
   const elements = todos.map((item) => {
     const { id, text, dateStamp, completed } = item;
     return (
@@ -22,7 +22,7 @@ const TaskList = ({ todos, onToggleCompleted, onDeleted }) => {
   });
 
   return <ul className="todo-list">{elements}</ul>;
-};
+}
 
 TaskList.propTypes = {
   onDeleted: PropTypes.func.isRequired,
@@ -36,6 +36,10 @@ TaskList.propTypes = {
       completed: PropTypes.bool.isRequired,
     })
   ),
+};
+
+TaskList.defaultProps = {
+  todos: [],
 };
 
 export default TaskList;

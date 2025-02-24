@@ -1,21 +1,17 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import "./app.css";
+import './app.css';
 
-import NewTaskForm from "../newTaskForm/newTaskForm";
-import TaskList from "../taskList/taskList";
-import Footer from "../footer/footer";
+import NewTaskForm from '../newTaskForm/newTaskForm';
+import TaskList from '../taskList/taskList';
+import Footer from '../footer/footer';
 
 export default class App extends Component {
   maxId = 0;
 
   state = {
-    todoData: [
-      this.createTask("Z"),
-      this.createTask("O"),
-      this.createTask("V"),
-    ],
-    filter: "All",
+    todoData: [this.createTask('Z'), this.createTask('O'), this.createTask('V')],
+    filter: 'All',
   };
 
   clearAllCompletedTasks = () => {
@@ -26,7 +22,7 @@ export default class App extends Component {
 
   onToggleCompleted = (id) => {
     this.setState(({ todoData }) => ({
-      todoData: this.toggleProperty(todoData, id, "completed"),
+      todoData: this.toggleProperty(todoData, id, 'completed'),
     }));
   };
 
@@ -50,10 +46,7 @@ export default class App extends Component {
   onDeleted = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
-      const updateTodoData = [
-        ...todoData.slice(0, idx),
-        ...todoData.slice(idx + 1),
-      ];
+      const updateTodoData = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
       return {
         todoData: updateTodoData,
       };
@@ -72,11 +65,11 @@ export default class App extends Component {
 
   filters = (filter, items) => {
     switch (filter) {
-      case "All":
+      case 'All':
         return items;
-      case "Active":
+      case 'Active':
         return items.filter((el) => !el.completed);
-      case "Completed":
+      case 'Completed':
         return items.filter((el) => el.completed);
       default:
         return items;
@@ -98,11 +91,7 @@ export default class App extends Component {
     return (
       <div className="todoapp">
         <NewTaskForm addTask={this.addTask} />
-        <TaskList
-          todos={renderedTask}
-          onToggleCompleted={this.onToggleCompleted}
-          onDeleted={this.onDeleted}
-        />
+        <TaskList todos={renderedTask} onToggleCompleted={this.onToggleCompleted} onDeleted={this.onDeleted} />
         <Footer
           countTasks={remainingTasks}
           clearAllCompletedTasks={this.clearAllCompletedTasks}

@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-
-import "./newTaskForm.css";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import './newTaskForm.css';
+import PropTypes from 'prop-types';
 
 export default class NewTaskForm extends Component {
   state = {
-    value: "",
+    value: '',
   };
 
   onValueChange = (e) => {
@@ -18,7 +17,7 @@ export default class NewTaskForm extends Component {
     e.preventDefault();
     this.props.addTask(this.state.value);
     this.setState({
-      value: "",
+      value: '',
     });
   };
 

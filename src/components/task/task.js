@@ -1,18 +1,11 @@
-import React from "react";
-import { formatDistanceToNow } from "date-fns";
-import PropTypes from "prop-types";
+import React from 'react';
+import { formatDistanceToNow } from 'date-fns';
+import PropTypes from 'prop-types';
 
-const Task = ({
-  id,
-  text,
-  timeStamp,
-  onToggleCompleted,
-  onDeleted,
-  completed,
-}) => {
-  let className = "";
+function Task({ id, text, timeStamp, onToggleCompleted, onDeleted, completed }) {
+  let className = '';
   if (completed) {
-    className += "completed";
+    className += 'completed';
   }
 
   const timeCreated = formatDistanceToNow(timeStamp, { includeSeconds: true });
@@ -20,27 +13,17 @@ const Task = ({
   return (
     <li className={className}>
       <div className="view">
-        <input
-          id={id}
-          className="toggle "
-          type="checkbox"
-          checked={completed}
-          onChange={onToggleCompleted}
-        />
+        <input id={id} className="toggle " type="checkbox" checked={completed} onChange={onToggleCompleted} />
         <label htmlFor={id}>
           <span className="description">{text}</span>
           <span className="created">created {timeCreated}</span>
         </label>
-        <button type="button" className="icon icon-edit"></button>
-        <button
-          type="button"
-          className="icon icon-destroy"
-          onClick={onDeleted}
-        ></button>
+        <button type="button" className="icon icon-edit" />
+        <button type="button" className="icon icon-destroy" onClick={onDeleted} />
       </div>
     </li>
   );
-};
+}
 
 Task.propTypes = {
   id: PropTypes.number.isRequired,
@@ -52,7 +35,7 @@ Task.propTypes = {
 };
 
 Task.defaultProps = {
-  text: "",
+  text: '',
   completed: false,
   timeStamp: new Date(),
 };
