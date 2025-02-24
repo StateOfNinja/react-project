@@ -1,1 +1,1 @@
-[Выполненное задание](https://stateofninja.github.io/react-project/react-project)
+[Выполненное задание](https://react-project-sand-one.vercel.app/)
