@@ -2,11 +2,15 @@ import js from '@eslint/js';
 import react from 'eslint-plugin-react';
 import importPlugin from 'eslint-plugin-import';
 import babelParser from '@babel/eslint-parser';
+import prettier from 'eslint-plugin-prettier';
 
 export default [
   js.configs.recommended,
   {
     ignores: ['node_modules', 'dist', 'build'],
+  },
+  {
+    extends: ['eslint-config-prettier'],
   },
   {
     languageOptions: {
@@ -31,8 +35,10 @@ export default [
     plugins: {
       react,
       import: importPlugin,
+      prettier,
     },
     rules: {
+      'prettier/prettier': 'error',
       indent: ['off', 2],
       'linebreak-style': [0, 'unix'],
       quotes: ['error', 'single'],

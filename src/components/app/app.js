@@ -10,8 +10,57 @@ export default class App extends Component {
   maxId = 0;
 
   state = {
-    todoData: [this.createTask('Z'), this.createTask('O'), this.createTask('V')],
+    todoData: [],
     filter: 'All',
+  };
+
+  intervals = {};
+
+  tick = (taskId) => {
+    this.setState(({ todoData }) => {
+      const updateTask = todoData.map((task) => {
+        if (task.id === taskId) {
+          if (task.isRunning && task.timer > 0) {
+            const newTimer = task.timer - 1;
+            return { ...task, timer: newTimer };
+          } else {
+            this.stopTimer(taskId);
+            return { ...task, isRunning: false };
+          }
+        }
+        return task;
+      });
+
+      return {
+        todoData: updateTask,
+      };
+    });
+  };
+
+  toggleTimer = (taskId) => {
+    this.setState(({ todoData }) => {
+      const updateTask = todoData.map((task) => {
+        if (task.id === taskId) {
+          if (!task.isRunning && task.timer > 0) {
+            this.intervals[taskId] = setInterval(() => this.tick(taskId), 1000);
+            return { ...task, isRunning: true };
+          } else {
+            this.stopTimer(taskId);
+            return { ...task, isRunning: false };
+          }
+        }
+        return task;
+      });
+
+      return {
+        todoData: updateTask,
+      };
+    });
+  };
+
+  stopTimer = (taskId) => {
+    clearInterval(this.intervals[taskId]);
+    delete this.intervals[taskId];
   };
 
   clearAllCompletedTasks = () => {
@@ -26,9 +75,13 @@ export default class App extends Component {
     }));
   };
 
-  createTask(text) {
+  createTask(formValues) {
+    const totalSeconds = parseInt(formValues.min, 10 || 0) * 60 + parseInt(formValues.sec, 10 || 0);
     return {
-      text,
+      formValues,
+      timer: totalSeconds,
+      isRunning: false,
+      isActive: false,
       completed: false,
       id: this.maxId++,
       dateStamp: Date.now(),
@@ -53,8 +106,8 @@ export default class App extends Component {
     });
   };
 
-  addTask = (text) => {
-    const newTask = this.createTask(text);
+  addTask = (formValues) => {
+    const newTask = this.createTask(formValues);
     this.setState(({ todoData }) => {
       const newTodoData = [...todoData, newTask];
       return {
@@ -85,13 +138,18 @@ export default class App extends Component {
 
     const renderedTask = this.filters(filter, todoData);
 
-    const completedTasks = todoData.filter((el) => el.completed).length;
+    const completedTasks = todoData.filter((el) => el?.completed).length;
     const remainingTasks = todoData.length - completedTasks;
 
     return (
       <div className="todoapp">
         <NewTaskForm addTask={this.addTask} />
-        <TaskList todos={renderedTask} onToggleCompleted={this.onToggleCompleted} onDeleted={this.onDeleted} />
+        <TaskList
+          todos={renderedTask}
+          toggleTimer={this.toggleTimer}
+          onToggleCompleted={this.onToggleCompleted}
+          onDeleted={this.onDeleted}
+        />
         <Footer
           countTasks={remainingTasks}
           clearAllCompletedTasks={this.clearAllCompletedTasks}
