@@ -5,24 +5,26 @@ import './taskList.css';
 
 import Task from '../task/task';
 
-function TaskList({ todos, onToggleCompleted, onDeleted, toggleTimer }) {
+function TaskList({ todos, onToggleCompleted, onDeleted, toggleTimer, onEditTask }) {
   const elements = todos.map((item) => {
-    const { id, formValues, dateStamp, completed, timer, isRunning } = item;
+    const { id, formValues, text, dateStamp, completed, timer, isRunning, isEdit } = item;
 
     return (
       <Task
         key={id}
         id={id}
-        text={formValues.text}
+        text={text}
         min={formValues.min}
         sec={formValues.sec}
         isRunning={isRunning}
         timer={timer}
         timeStamp={dateStamp}
         completed={completed}
+        isEdit={isEdit}
         onToggleCompleted={() => onToggleCompleted(id)}
         onDeleted={() => onDeleted(id)}
         toggleTimer={() => toggleTimer(id)}
+        onEditTask={() => onEditTask(id)}
       />
     );
   });

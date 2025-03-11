@@ -14,7 +14,15 @@ export default class App extends Component {
     filter: 'All',
   };
 
-  intervals = {};
+  intervalsRef = React.createRef();
+  intervalsRef = { current: {} };
+
+  onEditTask = (id, newText) => {
+    console.log(id, newText);
+    this.setState(({ todoData }) => ({
+      todoData: todoData.map((task) => (task.id === id ? { ...task, text: newText, isEdit: !task.isEdit } : task)),
+    }));
+  };
 
   tick = (taskId) => {
     this.setState(({ todoData }) => {
@@ -38,29 +46,29 @@ export default class App extends Component {
   };
 
   toggleTimer = (taskId) => {
-    this.setState(({ todoData }) => {
-      const updateTask = todoData.map((task) => {
-        if (task.id === taskId) {
-          if (!task.isRunning && task.timer > 0) {
-            this.intervals[taskId] = setInterval(() => this.tick(taskId), 1000);
-            return { ...task, isRunning: true };
-          } else {
-            this.stopTimer(taskId);
-            return { ...task, isRunning: false };
-          }
-        }
-        return task;
+    const { todoData } = this.state;
+    const task = todoData.find((item) => item.id === taskId);
+    if (!task.isRunning && task.timer > 0) {
+      this.startTimer(taskId);
+      this.setState({
+        todoData: this.toggleProperty(todoData, taskId, 'isRunning'),
       });
+    } else {
+      this.stopTimer(taskId);
+      this.setState({
+        todoData: this.toggleProperty(todoData, taskId, 'isRunning'),
+      });
+    }
+  };
 
-      return {
-        todoData: updateTask,
-      };
-    });
+  startTimer = (taskId) => {
+    clearInterval(this.intervalsRef.current[taskId]);
+    this.intervalsRef.current[taskId] = setInterval(() => this.tick(taskId), 1000);
   };
 
   stopTimer = (taskId) => {
-    clearInterval(this.intervals[taskId]);
-    delete this.intervals[taskId];
+    clearInterval(this.intervalsRef.current[taskId]);
+    delete this.intervalsRef.current[taskId];
   };
 
   clearAllCompletedTasks = () => {
@@ -79,10 +87,11 @@ export default class App extends Component {
     const totalSeconds = parseInt(formValues.min, 10 || 0) * 60 + parseInt(formValues.sec, 10 || 0);
     return {
       formValues,
+      text: formValues.text,
       timer: totalSeconds,
       isRunning: false,
-      isActive: false,
       completed: false,
+      isEdit: false,
       id: this.maxId++,
       dateStamp: Date.now(),
     };
@@ -92,7 +101,7 @@ export default class App extends Component {
     const idx = arr.findIndex((el) => el.id === id);
     const oldItem = arr[idx];
     const newItem = { ...oldItem, [propName]: !oldItem[propName] };
-
+    console.log(newItem);
     return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
   }
 
@@ -149,6 +158,7 @@ export default class App extends Component {
           toggleTimer={this.toggleTimer}
           onToggleCompleted={this.onToggleCompleted}
           onDeleted={this.onDeleted}
+          onEditTask={this.onEditTask}
         />
         <Footer
           countTasks={remainingTasks}
