@@ -3,22 +3,11 @@ import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
 export default class Task extends Component {
-  state = {
-    editText: this.props.text,
-  };
-
-  editingTextTask = (e) => {
-    const editText = e.target.value;
-    this.setState({
-      editText: editText,
-    });
-  };
-
   handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      const newText = this.state.editText;
-      console.log(newText);
-      this.props.onEditTask(this.props.id, newText);
+      console.log(e.target.value);
+      this.props.onEditTask(this.props.id, e.target.value);
+    } else if (e.key === 'Escape') {
     }
   };
 
@@ -35,11 +24,9 @@ export default class Task extends Component {
       onDeleted,
       completed,
       toggleTimer,
-      onEditTask,
       isEdit,
+      onChangeEditStatus,
     } = this.props;
-
-    const { editText } = this.state;
 
     let className = '';
 
@@ -67,7 +54,7 @@ export default class Task extends Component {
           <input id={id} className="toggle " type="checkbox" checked={completed} onChange={onToggleCompleted} />
           <label htmlFor={id}>
             <span className="description">{text}</span>
-            {(min !== '0' || sec !== '0') && (
+            {(min !== '0' || sec !== '0' || completed) && (
               <span className="description">
                 <button className={`icon ${isRunning ? 'icon-pause' : 'icon-play'}`} onClick={toggleTimer}></button>
                 {conversionTime(timer)}
@@ -75,16 +62,10 @@ export default class Task extends Component {
             )}
             <span className="created">created {timeCreated}</span>
           </label>
-          <button type="button" className="icon icon-edit" onClick={onEditTask} />
+          <button type="button" className="icon icon-edit" onClick={onChangeEditStatus} />
           <button type="button" className="icon icon-destroy" onClick={onDeleted} />
         </div>
-        <input
-          className="edit"
-          autoFocus
-          value={editText}
-          onChange={this.editingTextTask}
-          onKeyDown={this.handleKeyDown}
-        />
+        <input className="edit" autoFocus defaultValue={text} onKeyDown={this.handleKeyDown} />
       </li>
     );
   }

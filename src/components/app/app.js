@@ -18,9 +18,15 @@ export default class App extends Component {
   intervalsRef = { current: {} };
 
   onEditTask = (id, newText) => {
-    console.log(id, newText);
+    console.log('Received Edited Text:', newText);
     this.setState(({ todoData }) => ({
-      todoData: todoData.map((task) => (task.id === id ? { ...task, text: newText, isEdit: !task.isEdit } : task)),
+      todoData: todoData.map((task) => (task.id === id ? { ...task, text: newText, isEdit: false } : task)),
+    }));
+  };
+
+  onChangeEditStatus = (id) => {
+    this.setState(({ todoData }) => ({
+      todoData: this.toggleProperty(todoData, id, 'isEdit'),
     }));
   };
 
@@ -84,10 +90,11 @@ export default class App extends Component {
   };
 
   createTask(formValues) {
-    const totalSeconds = parseInt(formValues.min, 10 || 0) * 60 + parseInt(formValues.sec, 10 || 0);
+    const totalSeconds = parseInt(formValues.min, 10) * 60 + parseInt(formValues.sec, 10);
     return {
-      formValues,
       text: formValues.text,
+      min: formValues.min,
+      sec: formValues.sec,
       timer: totalSeconds,
       isRunning: false,
       completed: false,
@@ -159,6 +166,7 @@ export default class App extends Component {
           onToggleCompleted={this.onToggleCompleted}
           onDeleted={this.onDeleted}
           onEditTask={this.onEditTask}
+          onChangeEditStatus={this.onChangeEditStatus}
         />
         <Footer
           countTasks={remainingTasks}
