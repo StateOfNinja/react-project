@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 export default class Task extends Component {
   handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      console.log(e.target.value);
       this.props.onEditTask(this.props.id, e.target.value);
     } else if (e.key === 'Escape') {
+      this.props.onEditTask(this.props.id, this.props.text);
     }
   };
 

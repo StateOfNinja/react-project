@@ -24,7 +24,7 @@ function TaskList({ todos, onToggleCompleted, onDeleted, toggleTimer, onChangeEd
         onToggleCompleted={() => onToggleCompleted(id)}
         onDeleted={() => onDeleted(id)}
         toggleTimer={() => toggleTimer(id)}
-        onEditTask={(newText) => onEditTask(id, newText)}
+        onEditTask={onEditTask}
         onChangeEditStatus={() => onChangeEditStatus(id)}
       />
     );

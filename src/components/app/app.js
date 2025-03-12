@@ -18,7 +18,6 @@ export default class App extends Component {
   intervalsRef = { current: {} };
 
   onEditTask = (id, newText) => {
-    console.log('Received Edited Text:', newText);
     this.setState(({ todoData }) => ({
       todoData: todoData.map((task) => (task.id === id ? { ...task, text: newText, isEdit: false } : task)),
     }));
