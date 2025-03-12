@@ -103,19 +103,10 @@
   color: gray;
 }
 
-/* .todo-list li label .description {
-  word-break: break-all;
-  display: block;
-  line-height: 1.2;
-  transition: color 0.4s;
-  font-weight: 400;
-  color: #4d4d4d;
-} */
-
-/* .todo-list li.completed label .description {
+.todo-list li.completed label .description {
   color: #cdcdcd;
   text-decoration: line-through;
-} */
+}
 
 .todo-list li .icon {
   position: absolute;
@@ -183,6 +174,7 @@
 .todo-list li .edit {
   display: none;
 }
+
 
 .todo-list li.editing .edit {
   display: block;
