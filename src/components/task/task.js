@@ -31,13 +31,13 @@ export default class Task extends Component {
     let className = '';
 
     if (completed) {
-      className += 'completed';
+      className += 'completed ';
       if (isRunning) {
         toggleTimer(id);
       }
     }
     if (isEdit) {
-      className += 'editing';
+      className += 'editing ';
     }
 
     const conversionTime = (timer) => {
