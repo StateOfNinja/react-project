@@ -1,74 +1,83 @@
-import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
-export default class Task extends Component {
-  handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      this.props.onEditTask(this.props.id, e.target.value);
-    } else if (e.key === 'Escape') {
-      this.props.onEditTask(this.props.id, this.props.text);
+export default function Task({
+  id,
+  text,
+  min,
+  sec,
+  timeStamp,
+  timer,
+  isRunning,
+  onToggleCompleted,
+  onDeleted,
+  completed,
+  toggleTimer,
+  isEdit,
+  onChangeEditStatus,
+  onEditTask,
+}) {
+  const [editedText, setEditedText] = useState(text);
+
+  function changeText(e) {
+    setEditedText(e.target.value);
+  }
+
+  useEffect(() => {
+    if (!isEdit) {
+      setEditedText(text);
     }
+  }, [isEdit, text]);
+
+  function handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      onEditTask(id, e.target.value);
+    } else if (e.key === 'Escape') {
+      onEditTask(id, text);
+    }
+  }
+
+  let className = '';
+
+  if (completed) {
+    className += 'completed';
+    if (isRunning) {
+      toggleTimer(id);
+    }
+  }
+  if (isEdit) {
+    className += 'editing';
+  }
+
+  const conversionTime = (timer) => {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer - minutes * 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  render() {
-    const {
-      id,
-      text,
-      min,
-      sec,
-      timeStamp,
-      timer,
-      isRunning,
-      onToggleCompleted,
-      onDeleted,
-      completed,
-      toggleTimer,
-      isEdit,
-      onChangeEditStatus,
-    } = this.props;
+  const timeCreated = formatDistanceToNow(timeStamp, { includeSeconds: true });
 
-    let className = '';
-
-    if (completed) {
-      className += 'completed';
-      if (isRunning) {
-        toggleTimer(id);
-      }
-    }
-    if (isEdit) {
-      className += 'editing';
-    }
-
-    const conversionTime = (timer) => {
-      const minutes = Math.floor(timer / 60);
-      const seconds = timer - minutes * 60;
-      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    };
-
-    const timeCreated = formatDistanceToNow(timeStamp, { includeSeconds: true });
-
-    return (
-      <li className={className}>
-        <div className="view">
-          <input id={id} className="toggle " type="checkbox" checked={completed} onChange={onToggleCompleted} />
-          <label htmlFor={id}>
-            <span className="description">{text}</span>
-            {(min !== '0' || sec !== '0' || completed) && (
-              <span className="description">
-                <button className={`icon ${isRunning ? 'icon-pause' : 'icon-play'}`} onClick={toggleTimer}></button>
-                {conversionTime(timer)}
-              </span>
-            )}
-            <span className="created">created {timeCreated}</span>
-          </label>
-          <button type="button" className="icon icon-edit" onClick={onChangeEditStatus} />
-          <button type="button" className="icon icon-destroy" onClick={onDeleted} />
-        </div>
-        <input className="edit" autoFocus defaultValue={text} onKeyDown={this.handleKeyDown} />
-      </li>
-    );
-  }
+  return (
+    <li className={className}>
+      <div className="view">
+        <input id={id} className="toggle " type="checkbox" checked={completed} onChange={onToggleCompleted} />
+        <label htmlFor={id}>
+          <span className="description">{text}</span>
+          {(min !== '0' || sec !== '0' || completed) && (
+            <span className="description">
+              <button className={`icon ${isRunning ? 'icon-pause' : 'icon-play'}`} onClick={toggleTimer}></button>
+              {conversionTime(timer)}
+            </span>
+          )}
+          <span className="created">created {timeCreated}</span>
+        </label>
+        <button type="button" className="icon icon-edit" onClick={onChangeEditStatus} />
+        <button type="button" className="icon icon-destroy" onClick={onDeleted} />
+      </div>
+      <input className="edit" autoFocus value={editedText} onChange={changeText} onKeyDown={handleKeyDown} />
+    </li>
+  );
 }
 
 Task.propTypes = {
