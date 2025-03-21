@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import './tasksFilter.css';
 
 export default function TasksFilter({ filter, onFilterChange }) {
-  buttons = [
+  const buttons = [
     { name: 'All', label: 'All' },
     { name: 'Active', label: 'Active' },
     { name: 'Completed', label: 'Completed' },
   ];
 
-  const buttons = buttons.map(({ name, label }) => {
+  const filters = buttons.map(({ name, label }) => {
     const isActive = filter === name;
     const classButton = isActive ? 'selected' : '';
 
@@ -21,7 +21,7 @@ export default function TasksFilter({ filter, onFilterChange }) {
       </li>
     );
   });
-  return <ul className="filters">{buttons}</ul>;
+  return <ul className="filters">{filters}</ul>;
 }
 
 TasksFilter.propTypes = {
