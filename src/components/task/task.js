@@ -32,7 +32,7 @@ export default function Task({
 
   function handleKeyDown(e) {
     if (e.key === 'Enter') {
-      onEditTask(id, e.target.value);
+      onEditTask(id, editedText);
     } else if (e.key === 'Escape') {
       onEditTask(id, text);
     }

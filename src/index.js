@@ -6,4 +6,8 @@ import App from './components/app/app';
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
-root.render(<App />);
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
